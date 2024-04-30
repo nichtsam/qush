@@ -11,14 +11,14 @@ type Game struct {
 	gameboard *Gameboard
 }
 
-var ErrInvalidFont = errors.New("invalid font")
+var ErrInvalidButtonSetName = errors.New("invalid button set name")
 
-func NewGame(screen tcell.Screen, fontName string) (*Game, error) {
+func NewGame(screen tcell.Screen, buttonSetName string) (*Game, error) {
 	gameboard := &Gameboard{}
 
-	buttonSetCreator, ok := buttonSets[fontName]
+	buttonSetCreator, ok := buttonSetCreators[buttonSetName]
 	if !ok {
-		return nil, ErrInvalidFont
+		return nil, ErrInvalidButtonSetName
 	}
 	gameboard.ids, gameboard.buttons, gameboard.layout = buttonSetCreator()
 

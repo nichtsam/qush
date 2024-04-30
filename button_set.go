@@ -3,10 +3,10 @@ package main
 import "github.com/common-nighthawk/go-figure"
 
 type (
-	buttonsCreator func() (ButtonIds, Buttons, Layout)
+	buttonSetCreator func() (ButtonIds, Buttons, Layout)
 )
 
-var buttonSets = map[string]buttonsCreator{
+var buttonSetCreators = map[string]buttonSetCreator{
 	"raw": func() (ButtonIds, Buttons, Layout) {
 		ids := ButtonIds{}
 		bs := Buttons{}
