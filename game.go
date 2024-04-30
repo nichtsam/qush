@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+
 	"github.com/gdamore/tcell/v2"
 )
 
@@ -9,15 +11,21 @@ type Game struct {
 	gameboard *Gameboard
 }
 
-func NewGame(screen tcell.Screen) *Game {
+var ErrInvalidFont = errors.New("invalid font")
+
+func NewGame(screen tcell.Screen, fontName string) (*Game, error) {
 	gameboard := &Gameboard{}
 
-	gameboard.ids, gameboard.buttons, gameboard.layout = buttonSets["default"]()
+	buttonSetCreator, ok := buttonSets[fontName]
+	if !ok {
+		return nil, ErrInvalidFont
+	}
+	gameboard.ids, gameboard.buttons, gameboard.layout = buttonSetCreator()
 
 	return &Game{
 		screen,
 		gameboard,
-	}
+	}, nil
 }
 
 func (g *Game) Start() error {

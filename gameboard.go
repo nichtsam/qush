@@ -31,7 +31,7 @@ type (
 	Layout        map[ButtonId]ButtonLayout
 	ButtonLayout  struct {
 		x, y   int
-		symbol rune
+		symbol [][]rune
 	}
 )
 
@@ -102,17 +102,22 @@ func (b *Button) draw(s tcell.Screen, layout ButtonLayout, force bool) {
 		return
 	}
 
-	x, y, symbol := layout.x, layout.y, layout.symbol
+	originX, originY, symbol := layout.x, layout.y, layout.symbol
+	var style tcell.Style
 
 	switch b.state {
 	case IDLE:
-		s.SetContent(x, y, symbol, nil, tcell.StyleDefault.Foreground(tcell.ColorSeaGreen))
+		style = tcell.StyleDefault.Foreground(tcell.ColorGreen)
 	case WANTED:
-		s.SetContent(x, y, symbol, nil, tcell.StyleDefault.Foreground(tcell.ColorDarkOrange))
+		style = tcell.StyleDefault.Foreground(tcell.ColorDarkOrange)
 	case PUSHED:
-		s.SetContent(x, y, symbol, nil, tcell.StyleDefault.Foreground(tcell.ColorDarkRed))
-	default:
-		s.SetContent(x, y, symbol, nil, tcell.StyleDefault.Foreground(tcell.ColorGreenYellow))
+		style = tcell.StyleDefault.Foreground(tcell.ColorDarkOliveGreen)
+	}
+
+	for y, row := range symbol {
+		for x, r := range row {
+			s.SetContent(originX+x, originY+y, r, nil, style)
+		}
 	}
 }
 
