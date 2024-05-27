@@ -13,6 +13,11 @@ const (
 	PUSHED
 )
 
+const (
+	MIN_WANTED_AMOUNT = 5
+	MAX_WANTED_AMOUNT = 10
+)
+
 var (
 	ErrButtonNotFound  = errors.New("button not found")
 	ErrTriggerNotFound = errors.New("button trigger not found")
@@ -72,7 +77,7 @@ func (gb *Gameboard) reset() {
 }
 
 func (gb *Gameboard) wantRandomButtons() {
-	randomIds := generateUniqueRandoms(maps.Keys(gb.buttons))
+	randomIds := generateUniqueRandoms(maps.Keys(gb.buttons), MIN_WANTED_AMOUNT, MAX_WANTED_AMOUNT)
 
 	for _, id := range randomIds {
 		button := gb.buttons[id]

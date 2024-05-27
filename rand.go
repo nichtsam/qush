@@ -6,9 +6,9 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-func generateUniqueRandoms[V any](options []V) []V {
+func generateUniqueRandoms[V any](options []V, minAmount, maxAmount int) []V {
 	optionCount := len(options)
-	resultCount := rand.IntN(optionCount)
+	resultCount := max(min(rand.IntN(optionCount), maxAmount), minAmount)
 	result := make(map[int]V)
 
 	for len(result) < resultCount {
