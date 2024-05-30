@@ -1,3 +1,5 @@
+.PHONY: start build
+
 start: build
 	@./build/qush
 
