@@ -40,28 +40,27 @@ type (
 	}
 )
 
-func (gb *Gameboard) HandleKeyEvent(ev *tcell.EventKey) error {
-	if ev.Key() == tcell.KeyRune {
-		switch r := ev.Rune(); r {
-		case ' ':
-			gb.reset()
-			gb.wantRandomButtons()
+func (gb *Gameboard) NewRound() {
+	gb.reset()
+	gb.wantRandomButtons()
+}
 
-		default:
-			maybeTrigger := ButtonTrigger(r)
-			bid, ok := gb.ids[maybeTrigger]
-			if !ok {
-				return ErrTriggerNotFound
-			}
-
-			err := gb.pushButton(bid)
-			if err != nil {
-				return err
-			}
-		}
+func (gb *Gameboard) PushButton(bid ButtonId) error {
+	b, ok := gb.buttons[bid]
+	if !ok {
+		return ErrButtonNotFound
 	}
+	b.push()
 	return nil
 }
+
+type (
+	Button struct {
+		state     buttonState
+		prevState buttonState
+	}
+	buttonState int
+)
 
 func (gb *Gameboard) draw(s tcell.Screen, force bool) {
 	for bid, b := range gb.buttons {
@@ -84,23 +83,6 @@ func (gb *Gameboard) wantRandomButtons() {
 		button.want()
 	}
 }
-
-func (gb *Gameboard) pushButton(bid ButtonId) error {
-	b, ok := gb.buttons[bid]
-	if !ok {
-		return ErrButtonNotFound
-	}
-	b.push()
-	return nil
-}
-
-type (
-	Button struct {
-		state     buttonState
-		prevState buttonState
-	}
-	buttonState int
-)
 
 func (b *Button) draw(s tcell.Screen, layout ButtonLayout, force bool) {
 	if b.state == b.prevState && !force {
