@@ -1,9 +1,10 @@
 package main
 
 import (
+	"embed"
 	"errors"
+	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/gopxl/beep"
@@ -33,8 +34,11 @@ func newAudio() *audio {
 	}
 }
 
-func (a *audio) register(name string, filepath string) error {
-	f, err := os.Open(filepath)
+//go:embed assets/sounds/*
+var assets embed.FS
+
+func (a *audio) register(name string, filename string) error {
+	f, err := assets.Open(fmt.Sprintf("assets/sounds/%s", filename))
 	if err != nil {
 		return err
 	}

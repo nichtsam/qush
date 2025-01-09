@@ -32,7 +32,7 @@ func NewGame(screen tcell.Screen, buttonSetName string) (*Game, error) {
 }
 
 func (g *Game) Start() error {
-	if err := g.audio.register("pop", "./assets/sounds/pop.mp3"); err != nil {
+	if err := g.audio.register("pop", "pop.mp3"); err != nil {
 		return err
 	}
 
